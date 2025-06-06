@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { BACKEND_URL } from "./constants";
 import { FormState, loginFormSchema, signupFormSchema } from "./type";
+import { createSession } from "./session";
 
 export async function signUp(state: FormState , formData: FormData): Promise<FormState> {
 
@@ -75,7 +76,13 @@ export async function signIn( state: FormState, formData: FormData): Promise<For
     if(res.ok) {
         const result = await res.json();
         // TODO Créer une session pour les user authentifié
-        console.log({ result });
+        await createSession({
+            user: {
+                id: result.id,
+                name: result.name
+            }
+        });
+        redirect('/');
         
     } else {
         return {
