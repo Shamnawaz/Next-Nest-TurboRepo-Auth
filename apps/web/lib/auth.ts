@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { BACKEND_URL } from "./constants";
-import { FormState, signupFormSchema } from "./type";
+import { FormState, loginFormSchema, signupFormSchema } from "./type";
 
 export async function signUp(state: FormState , formData: FormData): Promise<FormState> {
 
@@ -18,7 +18,7 @@ export async function signUp(state: FormState , formData: FormData): Promise<For
         name: formData.get('name'),
         email: formData.get('email'),
         password: formData.get('password')
-    })
+    });
 
     if(!validationFields.success) {
         return {
@@ -32,7 +32,7 @@ export async function signUp(state: FormState , formData: FormData): Promise<For
             // formErrors: []
             // }
             error: validationFields.error.flatten().fieldErrors // Extrait les erreurs de manière structurée pour chaque champ : name, email et password
-        }
+        };
     }
 
     const res = await fetch(`${BACKEND_URL}/auth/signup`, {
@@ -41,7 +41,7 @@ export async function signUp(state: FormState , formData: FormData): Promise<For
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(validationFields.data)
-    })
+    });
 
     if(res.ok) {
         redirect('/auth/signin');
@@ -50,6 +50,36 @@ export async function signUp(state: FormState , formData: FormData): Promise<For
         return {
             // ConflictException
             message: res.status === 409 ? 'L\'utilisateur est déjà inscrit !' : res.statusText
-        }
+        };
+    }
+}
+
+export async function signIn( state: FormState, formData: FormData): Promise<FormState> {
+    const validationFields = loginFormSchema.safeParse({
+        email: formData.get('email'),
+        password: formData.get('password')
+    });
+
+    if(!validationFields.success) {
+        return { error: validationFields.error.flatten().fieldErrors };
+    }
+
+    const res = await fetch(`${BACKEND_URL}/auth/signin`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(validationFields.data)
+    });
+
+    if(res.ok) {
+        const result = await res.json();
+        // TODO Créer une session pour les user authentifié
+        console.log({ result });
+        
+    } else {
+        return {
+            message: res.status === 401 ? 'Mot de passe inccorrect' : res.statusText
+        };
     }
 }

@@ -24,7 +24,7 @@ export const signupFormSchema = z.object({
         .trim()
 });
 
-// export const loginFormSchema = z.object({
-//     email: z.string().email({ message: "Adresse email invalide" }),
-//     password: z.string().min(1, { message: "Password field must be not empty." }),
-// });
+export const loginFormSchema = z.object({
+    email: z.string().email({ message: "Adresse email invalide" }),
+    password: z.string().min(1, { message: "Le champ mot de passe ne doit pas être vide" }),
+});
