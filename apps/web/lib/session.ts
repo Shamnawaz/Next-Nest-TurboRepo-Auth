@@ -48,6 +48,9 @@ export async function getSession() {
     } catch (error) {
         console.error('Failed to verify the session');
         redirect('/auth/signin');
-        
     }
+}
+
+export async function deleteSession() {
+    (await cookies()).delete('session');
 }
