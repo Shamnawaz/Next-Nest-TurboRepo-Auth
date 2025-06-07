@@ -29,6 +29,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('protected')
   getAll(@Request() req) {
-    return `now you can access this protected API. this is your user ID: ${req.user.id}`;
+    return {message: `now you can access this protected API. this is your user ID: ${req.user.id}`};
   }
 }
