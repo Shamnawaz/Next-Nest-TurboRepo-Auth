@@ -23,7 +23,7 @@ Ce projet est un système d'authentification complet construit avec **Next.js (f
 
 - 📝 Formulaire d'inscription (Sign Up Form)
 - 🔑 Formulaire de connexion (Sign In Form)
-- 🧠 Gestion de formulaire avec `useFormState`
+- 🧠 Gestion de formulaire avec `useActionState`
 - 📦 Sessions persistantes
 - ♻️ Mise à jour des sessions
 - 🔐 Protection des pages
@@ -38,9 +38,9 @@ Ce projet est un système d'authentification complet construit avec **Next.js (f
 - **Backend** : [NestJS](https://nestjs.com/)
 - **Frontend** : [Next.js 15](https://nextjs.org/)
 - **ORM** : [Prisma](https://www.prisma.io/)
-- **Auth** : JWT, Refresh Token, Google OAuth 2.0
+- **Auth** : JWT (signé, vérifié et géré avec **JOSE**), Refresh Token, Google OAuth 2.0
 - **Base de données** : PostgreSQL
-- **UI State** : `useFormState`
+- **UI State** : `useActionState`
 
 ---
 
