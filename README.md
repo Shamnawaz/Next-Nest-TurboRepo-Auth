@@ -46,13 +46,14 @@ Ce projet est un système d'authentification complet construit avec **Next.js (f
 
 ## 📁 Structure du projet
 
+````plaintext
 apps/
-├── web/ # Frontend Next.js
-└── api/ # Backend NestJS
+├── web/    # Frontend Next.js
+└── api/    # Backend NestJS
 
 packages/
 ├── config/ # Configuration partagée
-└── ui/ # Composants UI réutilisables
+└── ui/     # Composants UI réutilisables
 
 ---
 
@@ -89,4 +90,4 @@ git clone https://github.com/Shamnawaz/Next-Nest-TurboRepo-Auth
 cd Next-Nest-TurboRepo-Auth
 npm install
 npm run dev
-```
+````
