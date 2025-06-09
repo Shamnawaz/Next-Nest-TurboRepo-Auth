@@ -35,7 +35,7 @@ export class AuthService {
         const isPasswordMatched = verify(user.password, password);
         if (!isPasswordMatched) throw new UnauthorizedException('Invalid Password');
 
-        return { id: user.id, name: user.name };
+        return { id: user.id, name: user.name, role: user.role };
     }
 
     // Responsable de la création du token jwt
@@ -67,7 +67,7 @@ export class AuthService {
         const user = await this.userService.findOne(userId);
         if(!user) throw new UnauthorizedException('User not found');
 
-        const currentUser = { id: user.id };
+        const currentUser = { id: user.id, role: user.role };
         return currentUser;
     }
 
