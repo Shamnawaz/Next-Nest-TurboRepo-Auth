@@ -12,6 +12,8 @@ import refreshConfig from './config/refresh.config';
 import { RefreshJwtStrategy } from './strategies/refresh.strategy';
 import googleOauthConfig from './config/google-oauth.config';
 import { GoogleStrategy } from './strategies/google.strategy';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -28,7 +30,11 @@ import { GoogleStrategy } from './strategies/google.strategy';
     LocalStrategy,
     JwtStrategy,
     RefreshJwtStrategy,
-    GoogleStrategy
+    GoogleStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard, //@UseGuard(JwtAuthGuard) sur tous les endpoints du projet
+    }
   ],
 })
 export class AuthModule {}
