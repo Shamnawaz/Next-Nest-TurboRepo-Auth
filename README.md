@@ -72,7 +72,7 @@ packages/
 
 - Cookies sécurisés (`httpOnly`, `Secure`)
 - Middleware de protection des routes côté frontend
-- Guards et decorators NestJS pour sécuriser les endpoints backend
+- Guards et decorators NestJS pour sécuriser les endpoints
 
 ---
 
