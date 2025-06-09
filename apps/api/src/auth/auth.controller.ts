@@ -29,7 +29,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   login(@Request() req) {
-    return this.authService.login(req.user.id, req.user.name);
+    return this.authService.login(req.user.id, req.user.name, req.user.role);
   }
 
   @Roles('ADMIN', 'EDITOR')
@@ -38,11 +38,12 @@ export class AuthController {
     return {message: `now you can access this protected API. this is your user ID: ${req.user.id}`};
   }
 
+  @Roles('USER', 'ADMIN', 'EDITOR')
   @Public()
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
   refreshToken(@Request() req) {
-    return this.authService.refreshToken(req.user.id, req.user.name);
+    return this.authService.refreshToken(req.user.id, req.user.name, req.user.role);
   }
 
   @Public()
@@ -54,10 +55,11 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
   async googleCallback(@Request() req, @Res() res: Response) {
-    const response = await this.authService.login(req.user.id, req.user.name);
-    res.redirect(`http://localhost:3000/api/auth/google/callback?userId=${response.id}&name=${response.name}&accessToken=${response.accessToken}&refreshToken=${response.refreshToken}`);
+    const response = await this.authService.login(req.user.id, req.user.name, req.user.role);
+    res.redirect(`http://localhost:3000/api/auth/google/callback?userId=${response.id}&name=${response.name}&accessToken=${response.accessToken}&refreshToken=${response.refreshToken}&role=${response.role}`);
   }
 
+  @Roles('USER', 'ADMIN', 'EDITOR')
   @Post('signout')
   signOut(@Request() req) {
     return this.authService.signOut(req.user.id);

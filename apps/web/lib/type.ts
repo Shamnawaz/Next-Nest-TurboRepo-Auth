@@ -28,3 +28,9 @@ export const loginFormSchema = z.object({
     email: z.string().email({ message: "Adresse email invalide" }),
     password: z.string().min(1, { message: "Le champ mot de passe ne doit pas être vide" }),
 });
+
+export enum Role {
+    ADMIN = 'ADMIN',
+    EDITOR = 'EDITOR',
+    USER = 'USER'
+}

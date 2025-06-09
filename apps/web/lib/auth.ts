@@ -79,7 +79,8 @@ export async function signIn(state: FormState, formData: FormData): Promise<Form
         await createSession({
             user: {
                 id: result.id,
-                name: result.name
+                name: result.name,
+                role: result.role,
             },
             accessToken: result.accessToken,
             refreshToken: result.refreshToken
