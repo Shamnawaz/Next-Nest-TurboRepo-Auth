@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
-import { verify } from 'argon2';
+import { hash, verify } from 'argon2';
 import { AuthJwtPayload } from './types/auth-jwtPayload';
 import { JwtService } from '@nestjs/jwt';
 import refreshConfig from './config/refresh.config';
@@ -41,7 +41,8 @@ export class AuthService {
     // Responsable de la création du token jwt
     async login(userId: number, name: string) {
         const {accessToken, refreshToken} = await this.generateTokens(userId);
-
+        const hashedRefreshToken = await hash(refreshToken);
+        await this.userService.updateHashedRefreshToken(userId, hashedRefreshToken);
         return {
             id: userId,
             name: name,
@@ -70,9 +71,14 @@ export class AuthService {
         return currentUser;
     }
 
-    async validateRefreshToken(userId: number) {
+    async validateRefreshToken(userId: number, refreshToken: string) {
         const user = await this.userService.findOne(userId);
+        
         if(!user) throw new UnauthorizedException('User not found');
+        if(!user.hashedRefreshToken) throw new UnauthorizedException('Refresh Token not found');
+        
+        const refreshTokenMatched = await verify(user.hashedRefreshToken, refreshToken);
+        if(!refreshTokenMatched) throw new UnauthorizedException('Invalid Refresh Token');
 
         const currentUser = { id: user.id };
         return currentUser;
@@ -80,6 +86,8 @@ export class AuthService {
 
     async refreshToken(userId: number, name: string) {
         const {accessToken, refreshToken} = await this.generateTokens(userId);
+        const hashedRefreshToken = await hash(refreshToken);
+        await this.userService.updateHashedRefreshToken(userId, hashedRefreshToken);
 
         return {
             id: userId,
@@ -94,5 +102,9 @@ export class AuthService {
         if(user) return user;
         
         return await this.userService.create(googleUser);
+    }
+
+    signOut(userId: number) {
+        return this.userService.updateHashedRefreshToken(userId, null)
     }
 }
