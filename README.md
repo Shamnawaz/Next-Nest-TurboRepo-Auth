@@ -71,7 +71,7 @@ packages/
 
 ## 🔍 Validation des Formulaires
 
-La validation côté client est assurée avec la librairie **Zod**, permettant une validation **typée**, **fiable** et **réutilisable**.
+La validation côté client est assurée avec la librairie **Zod**, permettant de :
 
 - Valider les champs lors de l'inscription et de la connexion (nom, email, mot de passe)
 
