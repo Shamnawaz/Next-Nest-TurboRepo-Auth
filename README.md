@@ -1,6 +1,6 @@
 # 🛡️ Next-Nest-TurboRepo-Auth
 
-Ce projet est un système d'authentification complet construit avec **Next.js (frontend)**, **NestJS (backend)**, le tout orchestré avec **TurboRepo** pour une gestion monorepo efficace. Il intègre l’authentification via mot de passe et Google OAuth 2.0, une gestion sécurisée des tokens JWT (access/refresh), le contrôle d'accès basé sur les rôles (RBAC) et une configuration PostgreSQL avec Prisma.
+Ce projet est une application web avec un système d'authentification complet construit avec **Next.js (frontend)**, **NestJS (backend)**, le tout orchestré avec **TurboRepo** pour une gestion monorepo efficace. Il intègre l’authentification via mot de passe et Google OAuth 2.0, une gestion sécurisée des tokens JWT (access/refresh), le contrôle d'accès basé sur les rôles (RBAC) et une configuration PostgreSQL avec Prisma.
 
 ---
 
@@ -87,7 +87,7 @@ La validation côté client est assurée avec la librairie **Zod**, permettant u
 
 - Cookies sécurisés (`httpOnly`, `Secure`)
 - Middleware de protection des routes côté frontend
-- Guards et decorators NestJS pour sécuriser les endpoints backend
+- Guards et decorators NestJS pour sécuriser les endpoints
 
 ---
 
