@@ -1,0 +1,171 @@
+Authentification NestJS + NextJS avec TurboRepo :
+
+Warning: ne pas oublier pour les fichers strategy d'ajouter le mot clé Injectable() pour pouvoir les réutiliser.
+Pour faire une migration : npx prisma migrate dev --name <contexte>
+
+Étape 1 : Création du monorepo avec TurboRepo
+
+- npm i turbo --global
+- npx create-turbo@latest
+- npm install -D tailwindcss@3 postcss autoprefixer (dans le front)
+- npx tailwindcss init -p (dans le front)
+- Configurer Tailwind en suivant la doc
+- npm i -g @nestjs/cli
+- nest new api
+- Dans l'api rm .\.git\ -r -fo avant de commit
+- Modifier le fichier package.json + main.ts dans l'api
+- npm run dev
+
+Étape 2: Intégrer Prisma au backend
+
+- npm i prisma -D
+- npx prisma init
+- Modifier le fichier .env en changeant le lien pgsql
+- npx prisma db pull/push
+- npx prisma generate
+- nest g s prisma
+- Création du prisma client pour faciliter son utilisation
+
+Étape 3: SignUp API dans nestjs
+
+- nest g res auth --no-spec
+- création d'un dto pour créer un user
+- npm install -D class-validator class-transformer
+- Methode registerUser dans le controller + service
+- nest g res user
+
+
+Étape 4 : Password Hashing
+
+- npm i argon2
+- Implémentation de la méthode create + findByEmail dans user.service.ts
+- Implémentation de la méthode registerUser() dans auth.service.ts
+
+Étape 5 : SignUp Form dans NextJS
+
+- Création du dossier auth puis du fichier layout.tsx
+- Création du dossier signup dans auth
+- Installer et configurer ShadcnUI
+- Création d'un composant submitButton dans components/ui pour gérer l'état du form signup
+- useFormStatus
+- Mettre en place le server Action pour le form SignUp pour envoyer les données vers le backend (utilisé avec useActionState)
+- Création du composant server auth.ts et du fichier type.ts dans lib
+- Création du type FormState
+- Installer zod npm i zod
+- Implémentation de signUp dans auth.ts
+- Création d'un fichier constants.ts dans lib
+- Dans le fichier constants définir l'url du backend s'appuyant sur le dotenv du projet
+- Ajouter le useFormState dans signupform
+- Ajouter la gestion des erreurs dans signupform {state?.message && <p>{state.message}</p>}
+
+Étape 6 : Login API dans NestJS puis dans NextJS
+
+- npm i @nestjs/passport passport paassport-local (Auuthentification Local Strategy)
+- npm i -D @types/passport-local
+- Création du fichier local.strategy.ts dans auth/strategies
+- Création de la méthode validateLocalUser qui sera appelé par le LocalStrategy pour valider l'user
+- Création du LocalAuthGuard
+- nest g gu auth/guards/local-auth
+- Implémentation de la méthode login dans le controller
+- Création de la page Signin Côté front
+- Création du SignInForm
+- Création du Server Action Sign In
+- Création du loginSchema zod pour valider les données
+
+Étape 7 : Créer une session pour les user authentifié
+
+- Création d'un fichier session.ts dans lib
+- Initialisation du type Session
+- Implémentation de la méthode createSession
+- npm i jose
+- créer une clé secrète à mettre dans le dotenv
+- Encoder la clé secrète en utilisant TextEncoder
+- Création de la méthode getSession
+- Création des pages dashboard + appbar pour protéger ces routes
+- Implémentation du Sign Out (méthode deleteSession)
+- Protéger les routes
+
+Étape 8: Générer un token d'accès jwt pour protéger l'API
+
+- npm i @nestjs/jwt @nestjs/config
+- Créer une clé secrète puis le mettre dans le dotenv et l'appeler dans AuthModule dans la section imports (JwtModule.register({}))
+- création du dossier config pour tous les fichiers de config jwt
+- Création de la méthode login dans auth.service.ts
+- Création d'un type pour notre payload
+- Création de la méthode generateTokens
+- Modifier le type de session et corriger create session dans auth.ts (accessToken: result.accessToken)
+
+Étape 9 : Création de JWT Strategy pour valider le token d'accès
+
+- npm i passport-jwt
+- npm i -D @types/passport-jwt
+- Création du fichier jwt.strategy.ts dans strategies
+- Création de la méthode validateJwtUser qui sera appelé dans jwtStrategy 
+- Création d'un guard pour jwtstrategy nest g gu auth/guards/jwt-auth
+- Accéder aux api protégé depuis next
+- Création d'un fichier actions.ts dans lib
+- Création du server action getProfile dans actions.ts
+
+Étape 10 : Générer le Refresh Token
+
+- Création du fichier de configuration
+- Enregistrer la config dans AuthModule
+- Update la fonction generateTokens et login pour rajouter le refreshToken
+- Update le type session pour rajouter le refreshToken
+
+Étape 11: RefreshTokenStrategy
+
+- Création du fichier refresh.strategy.ts dans strategies
+- Implémentation de la méthode validateRefreshToken appelé dans le fichier de refreshStrategy
+- Création du fichier guard pour refresh
+- nest g gu auth/guards/refresh-auth
+- Ajouter le fichier strategy refresh dans AuthModule
+- Ajouter un endpoint pour refreshToken
+
+Étape 12: Refresh Token dans next
+
+- Implémenter la méthode refreshToken dans auth.ts qui appelle l'Endpoint
+- Update La session
+- Création de la méthode updateTokens
+- Création de la méthode AuthFetch
+- Création de l'interface FetchOptions qui hérite de request init pour palier à l'erreur possibly undefined
+- Warning : on peut modifier la session que sur un Server Action ou un Route handler donc création d'un route handler
+
+Étape 13: Ajout de l'authentification via Google via nest
+
+- Ajouter ces 3 props dans le dotenv : 
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=
+
+- Aller sur ce site : https://console.cloud.google.com/
+- Créer un nouveau projet 
+- Cliquer sur API et services > Ecran de consentement OAuth > suivre la procédure
+- Retour sur le menu API et Services > Identifiants > Créer des identifiants > ID Client OAuth > Application Web > Ajouter un uri (url du backend)
+pour Origines JS autorisés > Url de redirection : http://localhost:8000/auth/google/callback > Ajouter le callback au dotenv > Créer
+- Récupérer l'id client et le secret code du client et les mettre dans le dotenv
+- Création d'un fichier de config google
+- Enregistrer le fichier de config google dans authModule via configModule
+- npm i passport-google-oauth20
+- npm i -D @types/passport-google-oauth20
+- Création du google strategy
+- Création de la méthode validateGoogleUser qui sera appelé dans le validate de googlestrategy
+- Mettre à jour le validate de localstrategy pour vérifier que le mot de passe n'est pas vide et levé une exception si c'est le cas
+- Création du AuthGuard pour google
+- nest g gu auth/guards/google-auth
+- Ajouter googlestrategy dans authModule
+- Création des endpoint login google et callback
+
+Étape 14: Appeler l'API google depuis next
+
+- Création d'un API route qui va recevoir les données depuis le backend
+- Ajouter un bouton dans signin qui redirige vers l'Endpoint login google
+- Depuis le backend il faut appeler le route handler pour le callback de next
+
+Étape 15 : Invalider les tokens
+
+- Mettre à jour le schema prisma en rajoutant une colonne hashedRefreshToken
+- Mettre à jour la méthode login de sorte à ce qu'elle hash et update la table user
+- Implémenter la méthode updateHashedRefreshToken
+- Ajouter dans le fichier de strategy refresh l'option passReqToCallback pour accéder aux body dans la méthode validate
+- Regarder le projet à partir de mtn

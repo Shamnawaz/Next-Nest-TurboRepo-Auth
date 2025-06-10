@@ -38,6 +38,7 @@ Ce projet est un système d'authentification complet construit avec **Next.js (f
 - **Backend** : [NestJS](https://nestjs.com/)
 - **Frontend** : [Next.js 15](https://nextjs.org/)
 - **ORM** : [Prisma](https://www.prisma.io/)
+- **Validation** : [Zod](https://zod.dev/)
 - **Auth** : JWT (signé, vérifié et géré avec **JOSE**), Refresh Token, Google OAuth 2.0
 - **Base de données** : PostgreSQL
 - **UI State** : `useActionState`
@@ -65,6 +66,20 @@ packages/
 - **Refresh Token** sécurisé pour maintenir la session
 - **OAuth 2.0** via Google
 - **RBAC** (Role-Based Access Control) implémenté côté backend NestJS
+
+---
+
+## 🔍 Validation des Formulaires
+
+La validation côté client est assurée avec la librairie **Zod**, permettant une validation **typée**, **fiable** et **réutilisable**.
+
+- Valider les champs lors de l'inscription et de la connexion (nom, email, mot de passe)
+
+- Générer des messages d'erreur précis pour chaque champ
+
+- Structurer et typer les erreurs de manière claire
+
+- Garantir la cohérence des données avant l'envoi au backend
 
 ---
 
